@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  bot:
+    restart: unless-stopped
+    volumes:
+      - ./bot:/bot
+    env_file:
+      - .env_prod
+
+  postgres:
+    restart: unless-stopped
+    env_file:
+      - .env_prod
+
+  redis:
+    restart: unless-stopped
+
+

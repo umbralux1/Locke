@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  bot:
+    build: ./bot
+    image: parser:${TAG:-latest}
+    command: ./wait-for postgres:3333 redis:1111 -- python -X dev start.py
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - LOG_DIR=/bot/logs
+    ulimits:
+      nofile:
+        soft: 60000
+        hard: 60000
+
+  postgres:
+    image: postgres:15.4
+    command: -p 3333
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ulimits:
+      nofile:
+        soft: 60000
+        hard: 60000
+
+  redis:
+    image: redis:7.0.12
+    hostname: parser-redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - redis_data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ulimits:
+      nofile:
+        soft: 60000
+        hard: 60000
+
+volumes:
+  postgres_data:
+  redis_data:

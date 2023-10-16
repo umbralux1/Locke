@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  bot:
+    volumes:
+      - ./bot:/bot
+    env_file:
+      - ${ENV_DEV:-.env_dev}
+
+  postgres:
+    env_file:
+      - ${ENV_DEV:-.env_dev}
+    ports:
+      - "3333:3333"
+
+  redis:
+    ports:
+      - "1111:1111"
